@@ -1,0 +1,19 @@
+<label for="timeLog">Zeitlog</label>
+<textarea
+    id="timeLog"
+    class="bg-slate-100"
+    cols="100"
+    rows="15"
+    [(ngModel)]="timeLog"
+    (input)="updateResult()"
+></textarea>
+
+<input id="summarizeSameIssue" type="checkbox" [(ngModel)]="summarizeForSameJiraIssue" (change)="updateResult()" />
+<label for="summarizeSameIssue">Zeiten, die zum gleichen Vorgang gehören, zusammenfassen.</label>
+
+<input id="roundUp" type="checkbox" [(ngModel)]="roundUpTo5" (change)="updateResult()" />
+<label for="roundUp">Zeiten auf die nächsten 5 Minuten aufrunden.</label>
+
+<h1 class="text-2xl font-bold text-red-600">
+    Achte auf das richtige Datum, wenn du Zeiten für vergangene Tage nachträgst!
+</h1>
