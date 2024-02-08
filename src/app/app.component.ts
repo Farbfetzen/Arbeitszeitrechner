@@ -6,6 +6,4 @@ import { Component } from "@angular/core";
     imports: [],
     templateUrl: "./app.component.html",
 })
-export class AppComponent {
-    title = "Zeitlogginghelfer";
-}
+export class AppComponent {}
