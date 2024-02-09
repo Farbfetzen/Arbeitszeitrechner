@@ -1,19 +1,56 @@
-<label for="timeLog">Zeitlog</label>
-<textarea
-    id="timeLog"
-    class="bg-slate-100"
-    cols="100"
-    rows="15"
-    [(ngModel)]="timeLog"
-    (input)="updateResult()"
-></textarea>
-
-<input id="summarizeSameIssue" type="checkbox" [(ngModel)]="summarizeForSameJiraIssue" (change)="updateResult()" />
-<label for="summarizeSameIssue">Zeiten, die zum gleichen Vorgang gehören, zusammenfassen.</label>
-
-<input id="roundUp" type="checkbox" [(ngModel)]="roundUpTo5" (change)="updateResult()" />
-<label for="roundUp">Zeiten auf die nächsten 5 Minuten aufrunden.</label>
-
-<h1 class="text-2xl font-bold text-red-600">
-    Achte auf das richtige Datum, wenn du Zeiten für vergangene Tage nachträgst!
-</h1>
+<div class="flex flex-col items-center gap-5">
+    <div class="mt-5 flex gap-5">
+        <div class="flex flex-col gap-2">
+            <label for="timeLog">Zeitlog</label>
+            <textarea
+                id="timeLog"
+                class="bg-slate-100"
+                cols="100"
+                rows="15"
+                [(ngModel)]="timeLog"
+                (input)="updateResult()"
+            ></textarea>
+        </div>
+        <div class="flex flex-col justify-center gap-2">
+            <div>
+                <input
+                    id="summarizeSameIssue"
+                    class="mr-2 h-4 w-4"
+                    type="checkbox"
+                    [(ngModel)]="summarizeForSameJiraIssue"
+                    (change)="updateResult()"
+                />
+                <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
+            </div>
+            <div>
+                <input
+                    id="roundUp"
+                    class="mr-2 h-4 w-4"
+                    type="checkbox"
+                    [(ngModel)]="roundUpTo5"
+                    (change)="updateResult()"
+                />
+                <label for="roundUp">Auf volle 5 Minuten aufrunden.</label>
+            </div>
+        </div>
+    </div>
+    <table>
+        <caption>
+            Ergebnis
+        </caption>
+        @if (result) {
+            <thead>
+                <tr>
+                    <th>Schlüssel</th>
+                    <th>Dauer</th>
+                    <th>Beschreibung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr> for each line in the result -->
+            </tbody>
+        } @else {
+            <span class="text-red-600">Kein Zeitlog vorhanden. </span>
+        }
+    </table>
+</div>
