@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
+import { ResultElement } from "src/app/result";
+import { TimeLog } from "src/app/time-log";
+
 @Component({
     selector: "app-root",
     standalone: true,
@@ -8,39 +11,71 @@ import { FormsModule } from "@angular/forms";
     templateUrl: "./app.component.html",
 })
 export class AppComponent {
-    timeLog = "";
-
-    // Summarize times that belong to the same Jira issue.
+    rawTimeLog = "";
     summarizeForSameJiraIssue = true;
-
-    // Round up times to the nearest 5 minutes.
     roundUpTo5 = true;
-
-    result = "";
+    result: ResultElement[] | null = null;
+    errorMessage = "";
+    private timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
+    private keyRegex = /(?<key>[a-zA-Z]+-\d+)?/;
+    private descriptionRegex = /(?<description>.+)?/;
+    private inputRegex = new RegExp(
+        this.timeRegex.source + " ?" + this.keyRegex.source + " ?" + this.descriptionRegex.source,
+    );
 
     updateResult(): void {
-        // TODO: Update the output table
-        // console.log(this.timeLog);
-        // console.log("summarize: " + this.summarizeForSameJiraIssue);
-        // console.log("round: " + this.roundUpTo5);
+        this.result = null;
+        this.errorMessage = "";
+        if (!this.rawTimeLog) {
+            return;
+        }
+        const parsedInput = this.parseTimeLog();
+        if (!parsedInput) {
+            return;
+        }
+        this.createResult(parsedInput);
     }
 
-    // TODO: Der identifier für Jira-Issues heißt "key". Also "ABC-123" ist der key.
+    private parseTimeLog(): TimeLog[] | null {
+        const timeLogs = [];
+        for (const line of this.rawTimeLog.split("\n")) {
+            const groups = this.inputRegex.exec(line)?.groups;
+            if (!groups) {
+                this.errorMessage = "Der Input entspricht nicht dem erwarteten Format.";
+                return null;
+            }
+            timeLogs.push(
+                new TimeLog(
+                    groups["hours"],
+                    groups["minutes"],
+                    groups["seconds"],
+                    groups["key"],
+                    groups["description"],
+                ),
+            );
+        }
+        return timeLogs;
+    }
+
+    private createResult(parsedInput: TimeLog[]): void {
+        const result: ResultElement[] = [];
+        const times = parsedInput.map((line) => line.timeInSeconds);
+        const differences = times.slice(1).map((t, index) => t - times[index]);
+        if (differences.some((d) => d <= 0)) {
+            this.errorMessage = "Die Zeiten müssen aufsteigend sein.";
+            return;
+        }
+        // TODO: Sum differences for same keys if checkbox is ticked. The order of the results doesn't matter.
+
+        const durations = [];
+        for (const difference of differences) {
+            // TODO: Round up seconds to nearest five minutes if checkbox is ticked.
+            const hours = Math.floor(difference / 3600);
+            const minutes = Math.ceil((difference % 3600) / 60);
+            const h = hours > 0 ? hours + "h" : "";
+            const m = minutes > 0 ? minutes + "m" : "";
+            durations.push((h + " " + m).trim());
+        }
+        console.log(durations);
+    }
 }
-
-/*
-TODO: remove this
-Test data
-
-08:35:00 ABC-123 Make some coffee.
-08:44:21 FOO-9999 Review a PR.
-09:23:57 Pause
-09:27:03 SOMETHING-777 Meeting.
-11:03:22 CODE-42 Write some code.
-12:15:01 Pause
-12:59:31 INTERNAL-5555 Research something.
-14:22:23 FOO-9999 Review again.
-15:00:00 CODE-42 Finally back to programming.
-16:55:12 INTERNAL-5556 Sort e-mails, log time.
-17:10:42
-*/

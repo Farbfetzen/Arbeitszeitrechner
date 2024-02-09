@@ -7,7 +7,7 @@
                 class="bg-slate-100"
                 cols="100"
                 rows="15"
-                [(ngModel)]="timeLog"
+                [(ngModel)]="rawTimeLog"
                 (input)="updateResult()"
             ></textarea>
         </div>
@@ -49,6 +49,8 @@
             <tbody>
                 <!-- <tr> for each line in the result -->
             </tbody>
+        } @else if (errorMessage) {
+            <span class="font-bold text-red-600">{{ errorMessage }}</span>
         } @else {
             <span class="text-red-600">Kein Zeitlog vorhanden. </span>
         }
