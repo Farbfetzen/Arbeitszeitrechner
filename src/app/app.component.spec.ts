@@ -22,6 +22,6 @@ describe("AppComponent", () => {
     //     const fixture = TestBed.createComponent(AppComponent);
     //     fixture.detectChanges();
     //     const compiled = fixture.nativeElement as HTMLElement;
-    //     expect(compiled.querySelector("h1")?.textContent).toContain("Hello, Zeitlogginghelfer");
+    //     expect(compiled.querySelector("h1")?.textContent).toContain("Hello, Arbeitszeitrechner");
     // });
 });
