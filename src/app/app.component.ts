@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { ResultElement } from "src/app/result";
+import { ResultElement } from "src/app/result-element";
 import { TimeLog } from "src/app/time-log";
 
 @Component({
@@ -11,8 +11,10 @@ import { TimeLog } from "src/app/time-log";
     templateUrl: "./app.component.html",
 })
 export class AppComponent {
+    // debug
     rawTimeLog = "";
     summarizeForSameJiraIssue = true;
+    // TODO: should not be null but empty instead. Same for TimeLog.
     result: ResultElement[] | null = null;
     errorMessage = "";
     private timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
@@ -66,14 +68,19 @@ export class AppComponent {
         }
         // TODO: Sum differences for same keys if checkbox is ticked. The order of the results doesn't matter.
 
-        const durations = [];
-        for (const difference of differences) {
+        for (let i = 0; i < differences.length; i++) {
+            const difference = differences[i];
             const hours = Math.floor(difference / 3600);
             const minutes = Math.ceil((difference % 3600) / 60);
             const h = hours > 0 ? hours + "h" : "";
             const m = minutes > 0 ? minutes + "m" : "";
-            durations.push((h + " " + m).trim());
+            const duration = (h + " " + m).trim();
+            result.push({
+                duration: duration,
+                key: parsedInput[i].key ?? "",
+                description: parsedInput[i].description,
+            });
         }
-        console.log(durations);
+        this.result = result;
     }
 }

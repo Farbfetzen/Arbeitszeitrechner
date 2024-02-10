@@ -3,17 +3,17 @@ import { TestBed } from "@angular/core/testing";
 import { AppComponent } from "src/app/app.component";
 
 const validTestData = `\
-08:35:00 ABC-123 Make some coffee.
-08:44:21 FOO-9999 Review a PR.
+08:35:00 ABC-123 Erstmal Kaffee trinken
+08:44:21 FOO-9999 Review
 09:23:57 Pause
-09:27:03 MEET-777 A very important meeting.
-11:03:22 CODE-42 Write some code.
+09:27:03 MEET-777 sehr wichtige Besprechung
+11:03:22 CODE-42 Endlich Zeit zum Programmieren
 12:15:01 Pause
-12:59:31 INTERNAL-5555 Research something.
-14:22:23 FOO-9999 Review again.
-15:00:00 CODE-42 Finally back to programming for exactly one hour.
-16:00:00 MEET-99 Another meeting.
-16:55:12 INTERNAL-5556 Sort e-mails, log time.
+12:59:31 INTERNAL-5555 Recherche
+14:22:23 FOO-9999 Review
+15:00:00 CODE-42 Programmieren für genau eine Stunde
+16:00:00 MEET-99 Noch eine Besprechung.
+16:55:12 INTERNAL-5556 E-Mails, Zeitlogging, etc.
 17:10:42`;
 
 describe("AppComponent", () => {

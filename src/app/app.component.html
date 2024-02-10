@@ -1,48 +1,51 @@
-<div class="flex flex-col items-center gap-5">
-    <div class="mt-5 flex gap-5">
-        <div class="flex flex-col gap-2">
-            <label for="timeLog">Zeitlog</label>
-            <textarea
-                id="timeLog"
-                class="bg-slate-100"
-                cols="100"
-                rows="15"
-                [(ngModel)]="rawTimeLog"
-                (input)="updateResult()"
-            ></textarea>
-        </div>
-        <div class="flex flex-col justify-center gap-2">
-            <div>
-                <input
-                    id="summarizeSameIssue"
-                    class="mr-2 h-4 w-4"
-                    type="checkbox"
-                    [(ngModel)]="summarizeForSameJiraIssue"
-                    (change)="updateResult()"
-                />
-                <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
-            </div>
-        </div>
+<div class="mx-auto mt-7 flex max-w-fit flex-col">
+    <label for="timeLog" class="mb-1">Zeitlog</label>
+    <textarea
+        id="timeLog"
+        class="border-2 border-slate-300 bg-slate-100 p-1"
+        cols="100"
+        rows="15"
+        [(ngModel)]="rawTimeLog"
+        (input)="updateResult()"
+    ></textarea>
+    <div class="my-2">
+        <input
+            id="summarizeSameIssue"
+            class="mr-2 h-4 w-4"
+            type="checkbox"
+            [(ngModel)]="summarizeForSameJiraIssue"
+            (change)="updateResult()"
+        />
+        <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
     </div>
-    <table>
-        <caption>
-            Ergebnis
-        </caption>
+    <div class="mt-2 self-center">
         @if (result) {
-            <thead>
-                <tr>
-                    <th>Schlüssel</th>
-                    <th>Dauer</th>
-                    <th>Beschreibung</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- <tr> for each line in the result -->
-            </tbody>
+            <table aria-label="Result">
+                <thead>
+                    <tr>
+                        <th class="border-b-2 px-3 text-left">Schlüssel</th>
+                        <th class="border-b-2 px-3 text-left">Dauer</th>
+                        <th class="border-b-2 px-3 text-left">Beschreibung</th>
+                        <th class="border-b-2 px-3 text-left">Eingetragen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (element of result; track $index) {
+                        <tr>
+                            <td class="px-3">{{ element.key }}</td>
+                            <td class="px-3">{{ element.duration }}</td>
+                            <td class="px-3">{{ element.description }}</td>
+                            <td class="px-3">
+                                <input type="checkbox" class="h-4 w-4" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         } @else if (errorMessage) {
             <span class="font-bold text-red-600">{{ errorMessage }}</span>
         } @else {
-            <span class="text-red-600">Kein Zeitlog vorhanden. </span>
+            <span>Kein Zeitlog vorhanden.</span>
         }
-    </table>
+    </div>
 </div>
