@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -7,43 +8,42 @@ import { TimeLog } from "src/app/time-log";
 @Component({
     selector: "app-root",
     standalone: true,
-    imports: [FormsModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: "./app.component.html",
+    styleUrl: "./app.component.css",
 })
 export class AppComponent {
-    // debug
     rawTimeLog = "";
     summarizeForSameJiraIssue = true;
-    // TODO: should not be null but empty instead. Same for TimeLog.
-    result: ResultElement[] | null = null;
+    result: ResultElement[] = [];
     errorMessage = "";
-    private timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
-    private keyRegex = /(?<key>[a-zA-Z]+-\d+)?/;
-    private descriptionRegex = /(?<description>.+)?/;
-    private inputRegex = new RegExp(
+    private readonly timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
+    private readonly keyRegex = /(?<key>[a-zA-Z]+-\d+)?/;
+    private readonly descriptionRegex = /(?<description>.+)?/;
+    private readonly inputRegex = new RegExp(
         this.timeRegex.source + " ?" + this.keyRegex.source + " ?" + this.descriptionRegex.source,
     );
 
     updateResult(): void {
-        this.result = null;
+        this.result = [];
         this.errorMessage = "";
         if (!this.rawTimeLog) {
             return;
         }
-        const parsedInput = this.parseTimeLog();
-        if (!parsedInput) {
+        const parsedTimeLog = this.parseTimeLog();
+        if (!parsedTimeLog) {
             return;
         }
-        this.createResult(parsedInput);
+        this.createResult(parsedTimeLog);
     }
 
-    private parseTimeLog(): TimeLog[] | null {
+    private parseTimeLog(): TimeLog[] {
         const timeLogs = [];
         for (const line of this.rawTimeLog.split("\n")) {
             const groups = this.inputRegex.exec(line)?.groups;
             if (!groups) {
                 this.errorMessage = "Der Input entspricht nicht dem erwarteten Format.";
-                return null;
+                return [];
             }
             timeLogs.push(
                 new TimeLog(
@@ -58,9 +58,8 @@ export class AppComponent {
         return timeLogs;
     }
 
-    private createResult(parsedInput: TimeLog[]): void {
-        const result: ResultElement[] = [];
-        const times = parsedInput.map((line) => line.timeInSeconds);
+    private createResult(parsedTimeLog: TimeLog[]): void {
+        const times = parsedTimeLog.map((line) => line.timeInSeconds);
         const differences = times.slice(1).map((t, index) => t - times[index]);
         if (differences.some((d) => d <= 0)) {
             this.errorMessage = "Die Zeiten müssen aufsteigend sein.";
@@ -75,12 +74,11 @@ export class AppComponent {
             const h = hours > 0 ? hours + "h" : "";
             const m = minutes > 0 ? minutes + "m" : "";
             const duration = (h + " " + m).trim();
-            result.push({
+            this.result.push({
                 duration: duration,
-                key: parsedInput[i].key ?? "",
-                description: parsedInput[i].description,
+                key: parsedTimeLog[i].key,
+                description: parsedTimeLog[i].description,
             });
         }
-        this.result = result;
     }
 }

@@ -1,5 +1,5 @@
 export interface ResultElement {
-    key: string;
+    key?: string;
     duration: string;
     description?: string;
 }

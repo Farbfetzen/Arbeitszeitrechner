@@ -2,7 +2,7 @@
     <label for="timeLog" class="mb-1">Zeitlog</label>
     <textarea
         id="timeLog"
-        class="border-2 border-slate-300 bg-slate-100 p-1"
+        class="border-2 border-slate-300 bg-slate-100 p-2"
         cols="100"
         rows="15"
         [(ngModel)]="rawTimeLog"
@@ -10,34 +10,37 @@
     ></textarea>
     <div class="my-2">
         <input
+            disabled
             id="summarizeSameIssue"
             class="mr-2 h-4 w-4"
             type="checkbox"
             [(ngModel)]="summarizeForSameJiraIssue"
             (change)="updateResult()"
         />
-        <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
+        <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen. (noch nicht implementiert)</label>
     </div>
     <div class="mt-2 self-center">
-        @if (result) {
-            <table aria-label="Result">
+        @if (result.length) {
+            <table aria-label="Result" class="border-y-2 border-y-gray-500">
                 <thead>
                     <tr>
-                        <th class="border-b-2 px-3 text-left">Schlüssel</th>
-                        <th class="border-b-2 px-3 text-left">Dauer</th>
-                        <th class="border-b-2 px-3 text-left">Beschreibung</th>
-                        <th class="border-b-2 px-3 text-left">Eingetragen</th>
+                        <th>Eingetragen</th>
+                        <th>Schlüssel</th>
+                        <th>Dauer</th>
+                        <th>Beschreibung</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (element of result; track $index) {
-                        <tr>
-                            <td class="px-3">{{ element.key }}</td>
-                            <td class="px-3">{{ element.duration }}</td>
-                            <td class="px-3">{{ element.description }}</td>
-                            <td class="px-3">
-                                <input type="checkbox" class="h-4 w-4" />
+                        <tr [ngClass]="{ '!h-8 align-bottom': $first, 'h-8 align-top': $last }">
+                            <td class="text-center">
+                                @if (element.key) {
+                                    <input type="checkbox" class="h-4 w-4" />
+                                }
                             </td>
+                            <td>{{ element.key }}</td>
+                            <td>{{ element.duration }}</td>
+                            <td>{{ element.description }}</td>
                         </tr>
                     }
                 </tbody>

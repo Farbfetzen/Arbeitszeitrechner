@@ -1,0 +1,8 @@
+td,
+th {
+    @apply px-3;
+}
+
+th {
+    @apply border-b-2 border-b-gray-300 text-left;
+}
