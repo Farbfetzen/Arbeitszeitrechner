@@ -13,7 +13,6 @@ import { TimeLog } from "src/app/time-log";
 export class AppComponent {
     rawTimeLog = "";
     summarizeForSameJiraIssue = true;
-    roundUpTo5 = true;
     result: ResultElement[] | null = null;
     errorMessage = "";
     private timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
@@ -69,7 +68,6 @@ export class AppComponent {
 
         const durations = [];
         for (const difference of differences) {
-            // TODO: Round up seconds to nearest five minutes if checkbox is ticked.
             const hours = Math.floor(difference / 3600);
             const minutes = Math.ceil((difference % 3600) / 60);
             const h = hours > 0 ? hours + "h" : "";
