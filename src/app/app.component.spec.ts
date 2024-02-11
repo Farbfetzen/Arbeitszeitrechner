@@ -32,10 +32,67 @@ describe("AppComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    // it("should render title", () => {
-    //     const fixture = TestBed.createComponent(AppComponent);
-    //     fixture.detectChanges();
-    //     const compiled = fixture.nativeElement as HTMLElement;
-    //     expect(compiled.querySelector("h1")?.textContent).toContain("Hello, Arbeitszeitrechner");
-    // });
+    it("should calculate durations without summarizing them", () => {
+        component.rawTimeLog = validTestData;
+        component.updateResult();
+        expect(component.result).toEqual([
+            { key: "ABC-123", description: "Erstmal Kaffee trinken", duration: "10m" },
+            { key: "FOO-9999", description: "Review", duration: "40m" },
+            { key: undefined, description: "Pause", duration: "4m" },
+            { key: "MEET-777", description: "sehr wichtige Besprechung", duration: "1h 37m" },
+            { key: "CODE-42", description: "Endlich Zeit zum Programmieren", duration: "1h 12m" },
+            { key: undefined, description: "Pause", duration: "45m" },
+            { key: "INTERNAL-5555", description: "Recherche", duration: "1h 23m" },
+            { key: "FOO-9999", description: "Review", duration: "38m" },
+            { key: "CODE-42", description: "Programmieren für genau eine Stunde", duration: "1h" },
+            { key: "MEET-99", description: "Noch eine Besprechung.", duration: "56m" },
+            { key: "INTERNAL-5556", description: "E-Mails, Zeitlogging, etc.", duration: "16m" },
+        ]);
+        expect(component.errorMessage).toEqual("");
+    });
+
+    ["foo", "12:34 TEST-123 Test", "123456 TEST-123 Test", "TEST-123 Test"].forEach((input) => {
+        it(`should set errorMessage for malformed input "${input}"`, () => {
+            component.rawTimeLog = input;
+            component.updateResult();
+            expect(component.result).toEqual([]);
+            expect(component.errorMessage).toEqual("Der Input entspricht nicht dem erwarteten Format.");
+        });
+    });
+
+    ["", " ", "\n"].forEach((input) => {
+        it(`should not error on empty or whitespace only input "${input}"`, () => {
+            component.rawTimeLog = input;
+            component.updateResult();
+            expect(component.result).toEqual([]);
+            expect(component.errorMessage).toEqual("");
+        });
+    });
+
+    [
+        " 12:34:56 TEST-123 Test\n12:34:57",
+        "12:34:56  TEST-123 Test\n12:34:57",
+        "12:34:56 TEST-123  Test\n12:34:57",
+        "12:34:56 TEST-123 Test \n12:34:57",
+        "12:34:56 TEST-123 Test\n 12:34:57",
+        "12:34:56 TEST-123 Test\n12:34:57 ",
+        "\n12:34:56 TEST-123 Test\n12:34:57",
+        "12:34:56 TEST-123 Test\n12:34:57\n",
+    ].forEach((input) => {
+        it(`should ignore extra whitespace in input "${input}"`, () => {
+            component.rawTimeLog = input;
+            component.updateResult();
+            expect(component.result).toEqual([{ key: "TEST-123", description: "Test", duration: "1m" }]);
+            expect(component.errorMessage).toEqual("");
+        });
+    });
+
+    ["12:34:56 TEST-123 Test\n12:34:55", "12:34:56 TEST-123 Test\n12:34:56"].forEach((input) => {
+        it(`should error because times are not ascending in input "${input}"`, () => {
+            component.rawTimeLog = input;
+            component.updateResult();
+            expect(component.result).toEqual([]);
+            expect(component.errorMessage).toEqual("Die Zeiten müssen aufsteigend sein.");
+        });
+    });
 });

@@ -14,30 +14,32 @@ import { TimeLog } from "src/app/time-log";
 })
 export class AppComponent {
     rawTimeLog = "";
-    summarizeForSameJiraIssue = true;
+    summarizeForSameJiraIssue = false;
     result: ResultElement[] = [];
     errorMessage = "";
     private readonly timeRegex = /(?<hours>[0-1]\d|2[0-3]):(?<minutes>[0-5]\d):(?<seconds>[0-5]\d)/;
     private readonly keyRegex = /(?<key>[a-zA-Z]+-\d+)?/;
     private readonly descriptionRegex = /(?<description>.+)?/;
     private readonly inputRegex = new RegExp(
-        this.timeRegex.source + " ?" + this.keyRegex.source + " ?" + this.descriptionRegex.source,
+        this.timeRegex.source + " *" + this.keyRegex.source + " *" + this.descriptionRegex.source,
     );
 
     updateResult(): void {
         this.result = [];
         this.errorMessage = "";
-        if (!this.rawTimeLog) {
-            return;
-        }
         const parsedTimeLog = this.parseTimeLog();
-        if (!parsedTimeLog) {
+        if (!parsedTimeLog.length) {
             return;
         }
         this.createResult(parsedTimeLog);
     }
 
     private parseTimeLog(): TimeLog[] {
+        // TODO: Check if last line only contains a time. And write a test for that.
+        this.rawTimeLog = this.rawTimeLog.trim();
+        if (this.rawTimeLog === "") {
+            return [];
+        }
         const timeLogs = [];
         for (const line of this.rawTimeLog.split("\n")) {
             const groups = this.inputRegex.exec(line)?.groups;
