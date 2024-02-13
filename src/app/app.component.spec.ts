@@ -52,6 +52,25 @@ describe("AppComponent", () => {
         expect(component.errorMessage).toEqual("");
     });
 
+    it("should calculate summarized durations", () => {
+        component.rawTimeLog = validTestData;
+        component.summarizeForSameJiraIssue = true;
+        component.updateResult();
+        // prettier-ignore
+        expect(component.result).toEqual([
+            jasmine.objectContaining({ formattedDuration: "10m", key: "ABC-123", description: "Erstmal Kaffee trinken" }),
+            jasmine.objectContaining({ formattedDuration: "1h 18m", key: "FOO-9999", description: "Review" }),
+            jasmine.objectContaining({ formattedDuration: "1h 37m", key: "MEET-777", description: "sehr wichtige Besprechung" }),
+            jasmine.objectContaining({ formattedDuration: "2h 12m", key: "CODE-42", description: "Endlich Zeit zum Programmieren | Programmieren für genau eine Stunde" }),
+            jasmine.objectContaining({ formattedDuration: "1h 23m", key: "INTERNAL-5555", description: "Recherche" }),
+            jasmine.objectContaining({ formattedDuration: "56m", key: "MEET-99", description: "Noch eine Besprechung." }),
+            jasmine.objectContaining({ formattedDuration: "16m", key: "INTERNAL-5556", description: "E-Mails, Zeitlogging, etc." }),
+            jasmine.objectContaining({ formattedDuration: "4m", key: undefined, description: "Pause" }),
+            jasmine.objectContaining({ formattedDuration: "45m", key: undefined, description: "Pause" }),
+        ]);
+        expect(component.errorMessage).toEqual("");
+    });
+
     ["foo", "12:34 TEST-123 Test", "123456 TEST-123 Test", "TEST-123 Test"].forEach((input) => {
         it(`should set errorMessage for malformed input "${input}"`, () => {
             component.rawTimeLog = input;
@@ -105,5 +124,20 @@ describe("AppComponent", () => {
         expect(component.result).toEqual([
             jasmine.objectContaining({ formattedDuration: "1h", key: "TEST-123", description: "Foo" }),
         ]);
+    });
+
+    [
+        { first: "foo", second: "", expected: "foo" },
+        { first: "", second: "foo", expected: "foo" },
+        { first: "", second: "", expected: undefined },
+    ].forEach((params) => {
+        it(`should combine descriptions "${params.first}" and "${params.second}" to "${params.expected}"`, () => {
+            component.rawTimeLog = `01:23:45 TEST-123 ${params.first}\n02:23:45 TEST-123 ${params.second}\n03:23:45`;
+            component.summarizeForSameJiraIssue = true;
+            component.updateResult();
+            expect(component.result).toEqual([
+                jasmine.objectContaining({ formattedDuration: "2h", key: "TEST-123", description: params.expected }),
+            ]);
+        });
     });
 });

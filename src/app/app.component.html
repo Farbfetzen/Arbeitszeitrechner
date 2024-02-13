@@ -10,14 +10,13 @@
     ></textarea>
     <div class="my-2">
         <input
-            disabled
             id="summarizeSameIssue"
             class="mr-2 h-4 w-4"
             type="checkbox"
             [(ngModel)]="summarizeForSameJiraIssue"
             (change)="updateResult()"
         />
-        <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen. (noch nicht implementiert)</label>
+        <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
     </div>
     <div class="mt-2 self-center">
         @if (result.length) {

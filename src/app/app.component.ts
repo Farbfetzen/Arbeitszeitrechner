@@ -72,5 +72,35 @@ export class AppComponent {
         for (let i = 0; i < differences.length; i++) {
             this.result.push(new ResultElement(differences[i], parsedTimeLog[i].key, parsedTimeLog[i].description));
         }
+        if (this.summarizeForSameJiraIssue) {
+            this.summarizeResults();
+        }
+    }
+
+    private summarizeResults(): void {
+        const map = new Map();
+        const elementsWithoutKeys = [];
+        for (const element of this.result) {
+            if (!element.key) {
+                elementsWithoutKeys.push(element);
+                continue;
+            }
+            if (!map.has(element.key)) {
+                map.set(element.key, element);
+                continue;
+            }
+            const value: ResultElement = map.get(element.key);
+            let combinedDescription;
+            if (value.description === element.description) {
+                combinedDescription = value.description;
+            } else {
+                combinedDescription = [value.description, element.description].filter((str) => str).join(" | ");
+            }
+            map.set(
+                element.key,
+                new ResultElement(value.duration + element.duration, element.key, combinedDescription),
+            );
+        }
+        this.result = [...map.values(), ...elementsWithoutKeys];
     }
 }
