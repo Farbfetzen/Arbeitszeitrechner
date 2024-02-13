@@ -95,4 +95,10 @@ describe("AppComponent", () => {
             expect(component.errorMessage).toEqual("Die Zeiten müssen aufsteigend sein.");
         });
     });
+
+    it("should display 60 minutes as '1h'", () => {
+        component.rawTimeLog = "11:02:43 TEST-123 Foo\n12:02:25.";
+        component.updateResult();
+        expect(component.result).toEqual([{ duration: "1h", key: "TEST-123", description: "Foo" }]);
+    });
 });

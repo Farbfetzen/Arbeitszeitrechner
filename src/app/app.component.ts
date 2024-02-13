@@ -70,9 +70,11 @@ export class AppComponent {
         // TODO: Sum differences for same keys if checkbox is ticked. The order of the results doesn't matter.
 
         for (let i = 0; i < differences.length; i++) {
-            const difference = differences[i];
-            const hours = Math.floor(difference / 3600);
-            const minutes = Math.ceil((difference % 3600) / 60);
+            let seconds = differences[i];
+            // Round up to full minutes.
+            seconds = Math.ceil(seconds / 60) * 60;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.ceil((seconds % 3600) / 60);
             const h = hours > 0 ? hours + "h" : "";
             const m = minutes > 0 ? minutes + "m" : "";
             const duration = (h + " " + m).trim();
