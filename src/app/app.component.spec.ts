@@ -35,18 +35,19 @@ describe("AppComponent", () => {
     it("should calculate durations without summarizing them", () => {
         component.rawTimeLog = validTestData;
         component.updateResult();
+        // prettier-ignore
         expect(component.result).toEqual([
-            { key: "ABC-123", description: "Erstmal Kaffee trinken", duration: "10m" },
-            { key: "FOO-9999", description: "Review", duration: "40m" },
-            { key: undefined, description: "Pause", duration: "4m" },
-            { key: "MEET-777", description: "sehr wichtige Besprechung", duration: "1h 37m" },
-            { key: "CODE-42", description: "Endlich Zeit zum Programmieren", duration: "1h 12m" },
-            { key: undefined, description: "Pause", duration: "45m" },
-            { key: "INTERNAL-5555", description: "Recherche", duration: "1h 23m" },
-            { key: "FOO-9999", description: "Review", duration: "38m" },
-            { key: "CODE-42", description: "Programmieren für genau eine Stunde", duration: "1h" },
-            { key: "MEET-99", description: "Noch eine Besprechung.", duration: "56m" },
-            { key: "INTERNAL-5556", description: "E-Mails, Zeitlogging, etc.", duration: "16m" },
+            jasmine.objectContaining({ formattedDuration: "10m", key: "ABC-123", description: "Erstmal Kaffee trinken" }),
+            jasmine.objectContaining({ formattedDuration: "40m", key: "FOO-9999", description: "Review" }),
+            jasmine.objectContaining({ formattedDuration: "4m", key: undefined, description: "Pause" }),
+            jasmine.objectContaining({ formattedDuration: "1h 37m", key: "MEET-777", description: "sehr wichtige Besprechung" }),
+            jasmine.objectContaining({ formattedDuration: "1h 12m", key: "CODE-42", description: "Endlich Zeit zum Programmieren" }),
+            jasmine.objectContaining({ formattedDuration: "45m", key: undefined, description: "Pause" }),
+            jasmine.objectContaining({ formattedDuration: "1h 23m", key: "INTERNAL-5555", description: "Recherche" }),
+            jasmine.objectContaining({ formattedDuration: "38m", key: "FOO-9999", description: "Review" }),
+            jasmine.objectContaining({ formattedDuration: "1h", key: "CODE-42", description: "Programmieren für genau eine Stunde" }),
+            jasmine.objectContaining({ formattedDuration: "56m", key: "MEET-99", description: "Noch eine Besprechung." }),
+            jasmine.objectContaining({ formattedDuration: "16m", key: "INTERNAL-5556", description: "E-Mails, Zeitlogging, etc." }),
         ]);
         expect(component.errorMessage).toEqual("");
     });
@@ -82,7 +83,9 @@ describe("AppComponent", () => {
         it(`should ignore extra whitespace in input "${input}"`, () => {
             component.rawTimeLog = input;
             component.updateResult();
-            expect(component.result).toEqual([{ key: "TEST-123", description: "Test", duration: "1m" }]);
+            expect(component.result).toEqual([
+                jasmine.objectContaining({ formattedDuration: "1m", key: "TEST-123", description: "Test" }),
+            ]);
             expect(component.errorMessage).toEqual("");
         });
     });
@@ -99,6 +102,8 @@ describe("AppComponent", () => {
     it("should display 60 minutes as '1h'", () => {
         component.rawTimeLog = "11:02:43 TEST-123 Foo\n12:02:25.";
         component.updateResult();
-        expect(component.result).toEqual([{ duration: "1h", key: "TEST-123", description: "Foo" }]);
+        expect(component.result).toEqual([
+            jasmine.objectContaining({ formattedDuration: "1h", key: "TEST-123", description: "Foo" }),
+        ]);
     });
 });

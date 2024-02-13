@@ -70,19 +70,7 @@ export class AppComponent {
         // TODO: Sum differences for same keys if checkbox is ticked. The order of the results doesn't matter.
 
         for (let i = 0; i < differences.length; i++) {
-            let seconds = differences[i];
-            // Round up to full minutes.
-            seconds = Math.ceil(seconds / 60) * 60;
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.ceil((seconds % 3600) / 60);
-            const h = hours > 0 ? hours + "h" : "";
-            const m = minutes > 0 ? minutes + "m" : "";
-            const duration = (h + " " + m).trim();
-            this.result.push({
-                duration: duration,
-                key: parsedTimeLog[i].key,
-                description: parsedTimeLog[i].description,
-            });
+            this.result.push(new ResultElement(differences[i], parsedTimeLog[i].key, parsedTimeLog[i].description));
         }
     }
 }
