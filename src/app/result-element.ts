@@ -3,6 +3,7 @@ export class ResultElement {
     formattedDuration: string;
     key?: string;
     description?: string;
+    checked = false;
 
     constructor(duration: number, key?: string, description?: string) {
         this.duration = duration;

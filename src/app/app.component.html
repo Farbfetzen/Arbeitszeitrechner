@@ -32,10 +32,16 @@
                 </thead>
                 <tbody>
                     @for (element of result; track $index) {
-                        <tr [ngClass]="{ '!h-8 align-bottom': $first, 'h-8 align-top': $last }">
+                        <tr
+                            [ngClass]="{
+                                '!h-8 align-bottom': $first,
+                                'h-8 align-top': $last,
+                                'text-gray-500 line-through': element.checked
+                            }"
+                        >
                             <td class="text-center">
                                 @if (element.key) {
-                                    <input type="checkbox" class="h-4 w-4" />
+                                    <input type="checkbox" class="h-4 w-4" [(ngModel)]="element.checked" />
                                 }
                             </td>
                             <td>{{ element.key }}</td>
