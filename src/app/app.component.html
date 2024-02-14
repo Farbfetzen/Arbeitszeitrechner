@@ -1,26 +1,18 @@
-<div class="mx-auto mt-7 flex max-w-fit flex-col">
-    <label for="timeLog" class="mb-1">Zeitlog</label>
-    <textarea
-        id="timeLog"
-        class="border-2 border-slate-300 bg-slate-100 p-2"
-        cols="100"
-        rows="15"
-        [(ngModel)]="rawTimeLog"
-        (input)="updateResult()"
-    ></textarea>
-    <div class="my-2">
+<div id="main-container">
+    <label for="timeLog">Zeitlog</label>
+    <textarea id="timeLog" cols="100" rows="15" [(ngModel)]="rawTimeLog" (input)="updateResult()"></textarea>
+    <div>
         <input
             id="summarizeSameIssue"
-            class="mr-2 h-4 w-4"
             type="checkbox"
             [(ngModel)]="summarizeForSameJiraIssue"
             (change)="updateResult()"
         />
         <label for="summarizeSameIssue">Gleiche Vorgänge zusammenfassen.</label>
     </div>
-    <div class="mt-2 self-center">
+    <div id="result-container">
         @if (result.length) {
-            <table aria-label="Result" class="border-y-2 border-y-gray-500">
+            <table aria-label="Result">
                 <thead>
                     <tr>
                         <th>Eingetragen</th>
@@ -31,16 +23,10 @@
                 </thead>
                 <tbody>
                     @for (element of result; track $index) {
-                        <tr
-                            [ngClass]="{
-                                '!h-8 align-bottom': $first,
-                                'h-8 align-top': $last,
-                                'text-gray-500 line-through': element.checked
-                            }"
-                        >
-                            <td class="text-center">
+                        <tr [class.row-checked]="element.checked">
+                            <td>
                                 @if (element.key) {
-                                    <input type="checkbox" class="h-4 w-4" [(ngModel)]="element.checked" />
+                                    <input type="checkbox" [(ngModel)]="element.checked" />
                                 }
                             </td>
                             <td>{{ element.key }}</td>
@@ -51,7 +37,7 @@
                 </tbody>
             </table>
         } @else if (errorMessage) {
-            <span class="font-bold text-red-600">{{ errorMessage }}</span>
+            <span class="error-message">{{ errorMessage }}</span>
         } @else {
             <span>Kein Zeitlog vorhanden.</span>
         }

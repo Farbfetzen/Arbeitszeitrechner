@@ -5,11 +5,7 @@
     "projects": {
         "Arbeitszeitrechner": {
             "projectType": "application",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "style": "none"
-                }
-            },
+            "schematics": {},
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",

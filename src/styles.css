@@ -1,10 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* For debugging. */
 /* * {
     outline: 2px dotted #ff000040;
 } */
+
+body {
+    background-color: #fafafa;
+    /* font-family taken from tailwindcss' font-sans */
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+}

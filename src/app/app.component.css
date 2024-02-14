@@ -1,8 +1,75 @@
-td,
-th {
-    @apply px-3;
+textarea {
+    background-color: #f0f5fa;
+    border: 2px solid #c8d7e1;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0.25rem 0;
+    padding: 0.5rem;
 }
 
-th {
-    @apply border-b-2 border-b-gray-300 text-left;
+input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+
+    & + label {
+        margin-left: 0.5rem;
+    }
+}
+
+table {
+    border-collapse: collapse;
+    border-top: 2px solid #6e6e6e;
+    border-bottom: 2px solid #6e6e6e;
+
+    td,
+    th {
+        padding: 0.1rem 0.75rem;
+    }
+
+    td:first-child {
+        text-align: center;
+    }
+
+    th {
+        border-bottom: 2px solid #c8d7dc;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    tr {
+        &:first-child {
+            height: 2rem;
+            vertical-align: bottom;
+        }
+
+        &:last-child {
+            height: 2rem;
+            vertical-align: top;
+        }
+
+        &.row-checked {
+            color: #6e6e6e;
+            text-decoration-line: line-through;
+        }
+    }
+}
+
+.error-message {
+    color: #dc2828;
+    font-weight: bold;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
+    max-width: fit-content;
+
+    & > div {
+        margin: 0.5rem 0;
+    }
+
+    #result-container {
+        align-self: center;
+    }
 }

@@ -5,9 +5,6 @@
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
-    "files.associations": {
-        "*.css": "tailwindcss"
-    },
     "markdownlint.config": {
         "default": true,
         "MD024": false
