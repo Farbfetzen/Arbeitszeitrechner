@@ -1,6 +1,13 @@
 <div id="main-container">
     <label for="timeLog">Zeitlog</label>
-    <textarea id="timeLog" cols="100" rows="15" [(ngModel)]="rawTimeLog" (input)="updateResult()"></textarea>
+    <textarea
+        id="timeLog"
+        cols="100"
+        rows="15"
+        [(ngModel)]="rawTimeLog"
+        (input)="updateResult()"
+        placeholder="08:35:00 ABC-123 Programmieren&#10;09:23:57 Pause&#10;09:27:03 MEET-777 Besprechung&#10;11:03:22"
+    ></textarea>
     <div>
         <input
             id="summarizeSameIssue"
