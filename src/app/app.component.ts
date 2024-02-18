@@ -13,7 +13,8 @@ import { TimeLog } from "src/app/time-log";
     styleUrl: "./app.component.css",
 })
 export class AppComponent {
-    rawTimeLog = "";
+    // rawTimeLog must be readonly because the undo functionality of the browser breaks if its value is modified.
+    readonly rawTimeLog = "";
     summarizeForSameJiraIssue = false;
     result: ResultElement[] = [];
     errorMessage = "";
@@ -35,12 +36,12 @@ export class AppComponent {
     }
 
     private parseTimeLog(): TimeLog[] {
-        this.rawTimeLog = this.rawTimeLog.trim();
-        if (this.rawTimeLog === "") {
+        const trimmedTimeLog = this.rawTimeLog.trim();
+        if (trimmedTimeLog === "") {
             return [];
         }
         const timeLogs = [];
-        for (const line of this.rawTimeLog.split("\n")) {
+        for (const line of trimmedTimeLog.split("\n")) {
             const groups = this.inputRegex.exec(line)?.groups;
             if (!groups) {
                 this.errorMessage = "Der Input entspricht nicht dem erwarteten Format.";

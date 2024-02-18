@@ -33,7 +33,7 @@ describe("AppComponent", () => {
     });
 
     it("should calculate durations without summarizing them", () => {
-        component.rawTimeLog = validTestData;
+        Object.assign(component, { rawTimeLog: validTestData });
         component.updateResult();
         // prettier-ignore
         expect(component.result).toEqual([
@@ -53,7 +53,7 @@ describe("AppComponent", () => {
     });
 
     it("should calculate summarized durations", () => {
-        component.rawTimeLog = validTestData;
+        Object.assign(component, { rawTimeLog: validTestData });
         component.summarizeForSameJiraIssue = true;
         component.updateResult();
         // prettier-ignore
@@ -73,7 +73,7 @@ describe("AppComponent", () => {
 
     ["foo", "12:34 TEST-123 Test", "123456 TEST-123 Test", "TEST-123 Test"].forEach((input) => {
         it(`should set errorMessage for malformed input "${input}"`, () => {
-            component.rawTimeLog = input;
+            Object.assign(component, { rawTimeLog: input });
             component.updateResult();
             expect(component.result).toEqual([]);
             expect(component.errorMessage).toEqual("Der Input entspricht nicht dem erwarteten Format.");
@@ -82,7 +82,7 @@ describe("AppComponent", () => {
 
     ["", " ", "\n"].forEach((input) => {
         it(`should not error on empty or whitespace only input "${input}"`, () => {
-            component.rawTimeLog = input;
+            Object.assign(component, { rawTimeLog: input });
             component.updateResult();
             expect(component.result).toEqual([]);
             expect(component.errorMessage).toEqual("");
@@ -100,7 +100,7 @@ describe("AppComponent", () => {
         "12:34:56 TEST-123 Test\n12:34:57\n",
     ].forEach((input) => {
         it(`should ignore extra whitespace in input "${input}"`, () => {
-            component.rawTimeLog = input;
+            Object.assign(component, { rawTimeLog: input });
             component.updateResult();
             expect(component.result).toEqual([
                 jasmine.objectContaining({ formattedDuration: "1m", key: "TEST-123", description: "Test" }),
@@ -111,7 +111,7 @@ describe("AppComponent", () => {
 
     ["12:34:56 TEST-123 Test\n12:34:55", "12:34:56 TEST-123 Test\n12:34:56"].forEach((input) => {
         it(`should error because times are not ascending in input "${input}"`, () => {
-            component.rawTimeLog = input;
+            Object.assign(component, { rawTimeLog: input });
             component.updateResult();
             expect(component.result).toEqual([]);
             expect(component.errorMessage).toEqual("Die Zeiten müssen aufsteigend sein.");
@@ -119,7 +119,7 @@ describe("AppComponent", () => {
     });
 
     it("should display 60 minutes as '1h'", () => {
-        component.rawTimeLog = "11:02:43 TEST-123 Foo\n12:02:25";
+        Object.assign(component, { rawTimeLog: "11:02:43 TEST-123 Foo\n12:02:25" });
         component.updateResult();
         expect(component.result).toEqual([
             jasmine.objectContaining({ formattedDuration: "1h", key: "TEST-123", description: "Foo" }),
@@ -132,7 +132,9 @@ describe("AppComponent", () => {
         { first: "", second: "", expected: undefined },
     ].forEach((params) => {
         it(`should combine descriptions "${params.first}" and "${params.second}" to "${params.expected}"`, () => {
-            component.rawTimeLog = `01:23:45 TEST-123 ${params.first}\n02:23:45 TEST-123 ${params.second}\n03:23:45`;
+            Object.assign(component, {
+                rawTimeLog: `01:23:45 TEST-123 ${params.first}\n02:23:45 TEST-123 ${params.second}\n03:23:45`,
+            });
             component.summarizeForSameJiraIssue = true;
             component.updateResult();
             expect(component.result).toEqual([
@@ -143,7 +145,7 @@ describe("AppComponent", () => {
 
     ["12:34:56 TEST-123 Test", "12:34:56 TEST-123 Test 1\n12:34:57 TEST-456"].forEach((input) => {
         it(`should display an error if last line contains more than just a time for input "${input}"`, () => {
-            component.rawTimeLog = input;
+            Object.assign(component, { rawTimeLog: input });
             component.updateResult();
             expect(component.result).toEqual([]);
             expect(component.errorMessage).toEqual("Die letzte Zeile darf nur eine Uhrzeit enthalten.");
