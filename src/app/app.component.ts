@@ -35,7 +35,6 @@ export class AppComponent {
     }
 
     private parseTimeLog(): TimeLog[] {
-        // TODO: Check if last line only contains a time. And write a test for that.
         this.rawTimeLog = this.rawTimeLog.trim();
         if (this.rawTimeLog === "") {
             return [];
@@ -57,6 +56,11 @@ export class AppComponent {
                 ),
             );
         }
+        const lastEntry = timeLogs[timeLogs.length - 1];
+        if (lastEntry.key || lastEntry.description) {
+            this.errorMessage = "Die letzte Zeile darf nur eine Uhrzeit enthalten.";
+            return [];
+        }
         return timeLogs;
     }
 
@@ -67,8 +71,6 @@ export class AppComponent {
             this.errorMessage = "Die Zeiten müssen aufsteigend sein.";
             return;
         }
-        // TODO: Sum differences for same keys if checkbox is ticked. The order of the results doesn't matter.
-
         for (let i = 0; i < differences.length; i++) {
             this.result.push(new ResultElement(differences[i], parsedTimeLog[i].key, parsedTimeLog[i].description));
         }

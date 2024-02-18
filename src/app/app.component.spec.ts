@@ -119,7 +119,7 @@ describe("AppComponent", () => {
     });
 
     it("should display 60 minutes as '1h'", () => {
-        component.rawTimeLog = "11:02:43 TEST-123 Foo\n12:02:25.";
+        component.rawTimeLog = "11:02:43 TEST-123 Foo\n12:02:25";
         component.updateResult();
         expect(component.result).toEqual([
             jasmine.objectContaining({ formattedDuration: "1h", key: "TEST-123", description: "Foo" }),
@@ -138,6 +138,15 @@ describe("AppComponent", () => {
             expect(component.result).toEqual([
                 jasmine.objectContaining({ formattedDuration: "2h", key: "TEST-123", description: params.expected }),
             ]);
+        });
+    });
+
+    ["12:34:56 TEST-123 Test", "12:34:56 TEST-123 Test 1\n12:34:57 TEST-456"].forEach((input) => {
+        it(`should display an error if last line contains more than just a time for input "${input}"`, () => {
+            component.rawTimeLog = input;
+            component.updateResult();
+            expect(component.result).toEqual([]);
+            expect(component.errorMessage).toEqual("Die letzte Zeile darf nur eine Uhrzeit enthalten.");
         });
     });
 });
