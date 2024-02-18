@@ -1,3 +1,3 @@
 # Arbeitszeitrechner
 
-Eine App zum Berechnen von Arbeitszeiten für das leichtere Loggen in Jira.
+Eine App zum Berechnen meiner Arbeitszeiten für das leichtere Loggen und Kontrollieren in Jira.
