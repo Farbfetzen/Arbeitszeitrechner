@@ -9,8 +9,8 @@
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
-        "format:check": "npx prettier --check .",
-        "format:write": "npx prettier --write .",
+        "formatCheck": "prettier --check .",
+        "formatWrite": "prettier --write .",
         "lint": "ng lint"
     },
     "private": true,
